@@ -1,0 +1,30 @@
+version: '3.5'
+
+services:
+  myapp-web:
+    build:
+      context: myapp
+      dockerfile: Dockerfile_dev
+    env_file: myapp/.env
+    tty: true
+    volumes:
+      - ./myapp/:/app/
+    ports:
+      - "8000:8000"
+    depends_on:
+      - myapp-db
+      - myapp-redis
+
+  myapp-db:
+    build:
+      context: db
+      dockerfile: Dockerfile
+    env_file: db/.env     
+    
+  myapp-redis:
+    image: "redis:5.0.7-alpine"   
+
+# not used here.  
+networks:
+  myapp_net:
+    driver: bridge
